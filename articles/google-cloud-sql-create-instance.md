@@ -64,7 +64,7 @@ gcloud services list --enabled | grep sqladmin
 ```bash
 gcloud sql instances create [db-instance-name] \
   --database-version=POSTGRES_18 \      # バージョン指定
-  --tier=db-f1-micro \                  # ティアの指定（db-f1-microは最も安いやつ）
+  --tier=db-f1-micro \                  # ティアの指定（db-f1-microは開発環境向けの最小構成）
   --edition=ENTERPRISE \                # エディションの指定 ENTERPRISE or ENTERPRISE_PLUS
   --region=asia-northeast1 \            # リージョンの指定（asia-northeast1はTokyoリージョン）
   --network=default \                   # ネットワークの指定
@@ -152,7 +152,7 @@ Group labels: Security（チェック必須）
 ### IAM認証の有効化
 
 ```bash
-gcloud sql instances patch [myapp-db] \
+gcloud sql instances patch [db-instance-name] \
   --database-flags=cloudsql.iam_authentication=on
 ```
 
@@ -164,7 +164,7 @@ gcloud sql instances patch [myapp-db] \
 
 ```bash
 gcloud sql users create developers@example.com \
-  --instance=[myapp-db] \
+  --instance=[db-instance-name] \
   --type=CLOUD_IAM_GROUP
 ```
 
@@ -175,7 +175,7 @@ Cloud SQL Studioで以下の手順でログイン：
 1. Cloud SQL Studioを開く
 2. 「新しい接続」
 3. **認証方法**: 「IAM認証」を選択
-4. **データベース**: `[myapp-db]`
+4. **データベース**: `myapp`
 5. 「接続」
 
 **接続確認:**
@@ -212,11 +212,11 @@ DROP TABLE test_table;
 
 ```bash
 # インスタンス停止
-gcloud sql instances patch myapp-db \
+gcloud sql instances patch [db-instance-name] \
   --activation-policy=NEVER
 
 # インスタンス再開
-gcloud sql instances patch myapp-db \
+gcloud sql instances patch [db-instance-name] \
   --activation-policy=ALWAYS
 ```
 
